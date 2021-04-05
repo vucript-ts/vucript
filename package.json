@@ -1,0 +1,35 @@
+{
+  "name": "vucript",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "tsc": "tsc && cat types.d.ts >> ./dist/index.d.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.14.37",
+    "@types/prettier": "^2.2.3",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "2.2.1",
+    "ts-node": "^9.1.1"
+  },
+  "dependencies": {
+    "@types/argparse": "^2.0.5",
+    "argparse": "^2.0.1",
+    "eslint": "^7.23.0",
+    "typescript": "^4.2.3",
+    "vue": "^3.0.9"
+  },
+  "bin": {
+    "vucript": "./dist/cli.js"
+  }
+}
