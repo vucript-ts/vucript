@@ -31,5 +31,6 @@
   },
   "bin": {
     "vucript": "./dist/cli.js"
-  }
+  },
+  "keywords": ["vue","typescript","vue-cli","frontend"]
 }
