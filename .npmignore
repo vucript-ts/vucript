@@ -1,3 +1,5 @@
 src
 .vscode
 test
+types.d.ts
+tsconfig.json
