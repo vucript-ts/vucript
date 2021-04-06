@@ -1,8 +1,8 @@
 # Vucript
 
-Vucript is a typescript dialect which compiles to components of Vue.
+Vucript is a typescript dialect that compiles to components of Vue.
 
-With vucript, you can write your Vue components more simply than normal TypeScript.
+With Vucript, you can write your Vue components more simply than normal TypeScript.
 
 ## Installation
 
@@ -88,4 +88,4 @@ Vucript.compileFile("./test/beforecompile/" + file, "./test/compiled/");//compil
 
 ## We need your help!
 
-Vucript is still in development and incomplete! We need your contribution to make Vucript better project. Please feel free to mention [@tomu_1576](https://twitter.com/tomu_1576) on Twitter if you need any help about contibution!
+Vucript is still in development and incomplete! We need your contribution to make Vucript a better project. Please feel free to mention [@tomu_1576](https://twitter.com/tomu_1576) on Twitter if you need any help about contribution!
