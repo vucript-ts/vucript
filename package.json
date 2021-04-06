@@ -1,36 +1,44 @@
 {
-  "name": "vucript",
-  "version": "0.0.2",
-  "description": "A typescript dialect which compiles to components of Vue.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "compile": "tsc && cat types.d.ts >> ./dist/index.d.ts"
-  },
-  "author": "tomu_1576",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^14.14.37",
-    "@types/prettier": "^2.2.3",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "ts-node": "^9.1.1",
-    "@types/argparse": "^2.0.5"
-  },
-  "dependencies": {
-    "argparse": "^2.0.1",
-    "eslint": "^7.23.0",
-    "prettier": "2.2.1",
-    "typescript": "^4.2.3",
-    "vue": "^3.0.0"
-  },
-  "bin": {
-    "vucript": "./dist/cli.js"
-  },
-  "keywords": ["vue","typescript","vue-cli","frontend"]
+    "name": "vucript",
+    "version": "0.0.2",
+    "description": "A typescript dialect which compiles to components of Vue.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "compile": "tsc && cat types.d.ts >> ./dist/index.d.ts"
+    },
+    "author": "tomu_1576",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/vucript-ts/vucript/issues"
+    },
+    "devDependencies": {
+        "@types/node": "^14.14.37",
+        "@types/prettier": "^2.2.3",
+        "@typescript-eslint/eslint-plugin": "^4.20.0",
+        "@typescript-eslint/parser": "^4.20.0",
+        "eslint-config-prettier": "^8.1.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "ts-node": "^9.1.1",
+        "@types/argparse": "^2.0.5"
+    },
+    "dependencies": {
+        "argparse": "^2.0.1",
+        "eslint": "^7.23.0",
+        "prettier": "2.2.1",
+        "typescript": "^4.2.3",
+        "vue": "^3.0.0"
+    },
+    "bin": {
+        "vucript": "./dist/cli.js"
+    },
+    "keywords": [
+        "vue",
+        "typescript",
+        "vue-cli",
+        "frontend"
+    ]
 }
