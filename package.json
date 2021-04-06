@@ -1,16 +1,16 @@
 {
   "name": "vucript",
   "version": "0.0.1",
-  "description": "",
+  "description": "A typescript dialect which compiles to components of Vue.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "tsc": "tsc && cat types.d.ts >> ./dist/index.d.ts"
+    "compile": "tsc && cat types.d.ts >> ./dist/index.d.ts"
   },
-  "author": "",
+  "author": "tomu_1576",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.14.37",
@@ -20,10 +20,10 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "prettier": "2.2.1",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "@types/argparse": "^2.0.5"
   },
   "dependencies": {
-    "@types/argparse": "^2.0.5",
     "argparse": "^2.0.1",
     "eslint": "^7.23.0",
     "typescript": "^4.2.3",
