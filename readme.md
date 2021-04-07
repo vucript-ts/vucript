@@ -6,11 +6,15 @@ With Vucript, you can write your Vue components more simply than normal TypeScri
 
 ## Installation
 
+### Vue CLI Plugin (Recommended)
+
 To use Vucript in your Vue CLI project, you need to run
 
 ```bash
 $ vue add vucript
 ```
+
+### NPM Installation
 
 If you want to install to non-Vue CLI project, you need to run
 
@@ -28,10 +32,10 @@ let counter:reactive<number> = 0;
 let add = () => {
   counter++;
 };
-const twiceTheCounter:computed<number> = (()=>counter);
+const twiceTheCounter:computed<number> = (()=>counter*2);
 ```
 
-Vucript compiler transforms the above to:
+Vucript compiler transforms the above to Vue Composition API Code
 
 ```typescript
 import { defineComponent, ref, computed } from "vue";
@@ -41,13 +45,13 @@ export default defineComponent({
     const add = () => {
       counter.value++;
     };
-    const twiceTheCounter = computed(() => counter.value);
+    const twiceTheCounter = computed(() => counter.value*2);
     return { counter, add, twiceTheCounter };
   },
 });
 ```
 
-Vucript code is more simple than normal Vue code!
+Vucript code is more simple than normal Vue Composition API code!
 
 ## Usage
 
@@ -62,7 +66,7 @@ let counter:reactive<number> = 0;
 let add = () => {
   counter++;
 };
-const twiceTheCounter:computed<number> = (()=>counter);
+const twiceTheCounter:computed<number> = (()=>counter*2);
 </script>
 ```
 
@@ -79,13 +83,17 @@ $ vucript component.ts
 
 Import Vucript and run `Vucript.compile` function!
 
-```javascript
+```typescript
 import Vucript from "vucript";
 
 let compiled = Vucript.compile(`let counter:reactive<number> = 0;`);//compile function returns compiled string.
 Vucript.compileFile("./test/beforecompile/" + file, "./test/compiled/");//compileFile function compiles and save a file.
 ```
 
-## We need your help!
+## Bug Report and Support
+
+Please create issue on GitHub or mention [@tomu_1576](https://twitter.com/tomu_1576) on Twitter.
+
+## We need your contribution!
 
 Vucript is still in development and incomplete! We need your contribution to make Vucript a better project. Please feel free to mention [@tomu_1576](https://twitter.com/tomu_1576) on Twitter if you need any help about contribution!
