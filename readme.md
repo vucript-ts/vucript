@@ -87,7 +87,7 @@ Import Vucript and run `Vucript.compile` function!
 import Vucript from "vucript";
 
 let compiled = Vucript.compile(`let counter:reactive<number> = 0;`);//compile function returns compiled string.
-Vucript.compileFile("./test/beforecompile/" + file, "./test/compiled/");//compileFile function compiles and save a file.
+Vucript.compileFile(filename, "./");//compileFile function compiles and save a file.
 ```
 
 ## Bug Report and Support
