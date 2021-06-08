@@ -81,16 +81,22 @@ export class generateVueTemplate {
                 (genCode += `const ${item.variableName} = reactive<${item.type}>(${item.content});`)
         );
         this.normalFuncs().forEach(function (this: generateVueTemplate, item) {
-            genCode += `const ${item.variableName} = ${this.escapeRefs(
-                item.content
+            genCode += `const ${
+                item.variableName
+            } = ${this.addDotValueToRefVariable(
+                item.identifier,
+                item.content,
+                item.startPosition
             )};`;
         }, this);
         this.lifecycleFuncs().forEach(function (
             this: generateVueTemplate,
             item
         ) {
-            genCode += `${item.variableName}(${this.escapeRefs(
-                item.content
+            genCode += `${item.variableName}(${this.addDotValueToRefVariable(
+                item.identifier,
+                item.content,
+                item.startPosition
             )});`;
         },
         this);
@@ -98,8 +104,12 @@ export class generateVueTemplate {
             this: generateVueTemplate,
             item
         ) {
-            genCode += `const ${item.variableName} = computed(${this.escapeRefs(
-                item.content
+            genCode += `const ${
+                item.variableName
+            } = computed(${this.addDotValueToRefVariable(
+                item.identifier,
+                item.content,
+                item.startPosition
             )});`;
         },
         <generateVueTemplate>this);
@@ -197,15 +207,39 @@ export class generateVueTemplate {
             )
             .map((item) => item?.variableName);
     }
-    private escapeRefs(str: string): string {
-        this.refs()
-            .map((item) => item.variableName)
-            .forEach((item) => {
-                str = str.replace(
-                    new RegExp("\\b(" + item + ")\\b", "g"),
-                    item + ".value"
+    private addDotValueToRefVariable(
+        identifiers: Identifiers[] | null,
+        str: string,
+        startPosition: number
+    ): string {
+        identifiers?.forEach((item) => {
+            if (
+                this.refs()
+                    .map((seconditem) => seconditem.variableName)
+                    .indexOf(item.str) != -1
+            ) {
+                str = this.replaceBetween(
+                    str,
+                    item.start - startPosition,
+                    item.end - startPosition,
+                    item.str + ".value"
                 );
-            });
+                startPosition -= 6;
+            }
+        });
         return str;
     }
+
+    private replaceBetween(
+        target: string,
+        start: number,
+        end: number,
+        what: string
+    ) {
+        return target.substring(0, start) + what + target.substring(end);
+    }
+}
+
+class Identifiers {
+    constructor(public start: number, public end: number, public str: string) {}
 }

@@ -16,8 +16,9 @@ function parse(str: string): parsedContentType[] {
     const sourceFile = ts.createSourceFile(
         "",
         str,
-        ts.ScriptTarget.Latest,
-        true
+        ts.ScriptTarget.ES2019,
+        true,
+        ts.ScriptKind.TS
     );
     let vueValiables: parsedContentType[] = [];
     vueValiables = [...sourceFile.getChildren()[0].getChildren()]
@@ -39,7 +40,11 @@ function visit(node: ts.Node): parsedContentType | undefined {
                         .getChildren()
                         .map((item) => item.getText())
                         .slice(2)
-                        .join("")
+                        .join(""),
+                searchIdentifier(node),
+                node.getStart() +
+                    (node?.name?.escapedText?.toString() ?? "").length +
+                    1
             );
         } else {
             return new lifecycleFunction(
@@ -49,7 +54,9 @@ function visit(node: ts.Node): parsedContentType | undefined {
                         .getChildren()
                         .map((item) => item.getText())
                         .slice(2)
-                        .join("")
+                        .join(""),
+                searchIdentifier(node),
+                node.getStart()
             );
         }
     } else if (node.kind == 232) {
@@ -83,7 +90,9 @@ function visit(node: ts.Node): parsedContentType | undefined {
                     return new computed(
                         type,
                         name,
-                        getValueFromStatement(node)
+                        getValueFromStatement(node),
+                        searchIdentifier(node),
+                        node.getStart() + name.length + 27
                     );
                     break;
                 default:
@@ -93,11 +102,15 @@ function visit(node: ts.Node): parsedContentType | undefined {
             return lifecycleHooksArray.indexOf(name) == -1
                 ? new normalFunction(
                       name,
-                      getNestedChild(node, [0, 1, 0, 2]).getText()
+                      getNestedChild(node, [0, 1, 0, 2]).getText(),
+                      searchIdentifier(node),
+                      getNestedChild(node, [0, 1, 0, 2]).getStart()
                   )
                 : new lifecycleFunction(
                       name,
-                      getNestedChild(node, [0, 1, 0, 2]).getText()
+                      getNestedChild(node, [0, 1, 0, 2]).getText(),
+                      searchIdentifier(node),
+                      getNestedChild(node, [0, 1, 0, 2]).getStart()
                   );
         }
     } else if (node.kind == 233) {
@@ -156,17 +169,26 @@ interface VueVariable {
 class lifecycleFunction implements VueVariable {
     constructor(
         readonly variableName: lifecycleHooksArrayType,
-        readonly content: string
+        readonly content: string,
+        readonly identifier: Identifiers[] | null,
+        readonly startPosition: number
     ) {}
 }
 class normalFunction implements VueVariable {
-    constructor(readonly variableName: string, readonly content: string) {}
+    constructor(
+        readonly variableName: string,
+        readonly content: string,
+        readonly identifier: Identifiers[] | null,
+        readonly startPosition: number
+    ) {}
 }
 class computed implements VueVariable {
     constructor(
         readonly type: string,
         readonly variableName: string,
-        readonly content: string
+        readonly content: string,
+        readonly identifier: Identifiers[] | null,
+        readonly startPosition: number
     ) {}
 }
 class ref implements VueVariable {
@@ -238,3 +260,25 @@ export {
     normalFunction,
     importComponent,
 };
+class Identifiers {
+    constructor(public start: number, public end: number, public str: string) {}
+}
+
+function searchIdentifier(node: ts.Node): Identifiers[] | null {
+    if (node.getChildCount() > 0) {
+        return node
+            .getChildren()
+            .map((item) => searchIdentifier(item))
+            .flat()
+            .filter<Identifiers>(
+                (item): item is Identifiers => item instanceof Identifiers
+            );
+    } else {
+        if (node.kind == 78 /* && node.flags == 67108864 */) {
+            return [
+                new Identifiers(node.getStart(), node.getEnd(), node.getText()),
+            ];
+        }
+    }
+    return null;
+}
