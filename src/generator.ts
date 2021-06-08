@@ -47,7 +47,7 @@ export class generateVueTemplate {
                 .forEach(function (item) {
                     const _item = <prop>item;
                     genCode += `${_item.variableName}: {type: ${
-                        _item.type
+                        _item.type.charAt(0).toUpperCase() + _item.type.slice(1)
                     },required: ${_item.isRequired},${
                         _item.isRequired ? "" : "default:" + _item.content
                     }},`;
