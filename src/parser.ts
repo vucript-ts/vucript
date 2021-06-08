@@ -92,7 +92,7 @@ function visit(node: ts.Node): parsedContentType | undefined {
                         name,
                         getValueFromStatement(node),
                         searchIdentifier(node),
-                        node.getStart() + name.length + 27
+                        getNestedChild(node, [0, 1, 0, 4])?.getStart()
                     );
                     break;
                 default:
