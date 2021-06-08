@@ -1,9 +1,9 @@
 import { defineComponent, toRefs, ref, reactive, computed } from "vue";
 export default defineComponent({
   props: {
-    something: { type: string, required: false, default: "ああああ" },
-    counter: { type: number, required: false, default: 0 },
-    me: { type: string, required: true },
+    something: { type: String, required: false, default: "ああああ" },
+    counter: { type: Number, required: false, default: 0 },
+    me: { type: String, required: true },
   },
   setup(props) {
     const { something, counter, me } = toRefs(props);

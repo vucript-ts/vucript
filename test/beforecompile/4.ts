@@ -1,3 +1,3 @@
-import { reactive,prop, computed } from 'Vucript';
+import { reactive, prop, computed } from "Vucript";
 
-let message:prop<String>;
+let message: prop<string>;

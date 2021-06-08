@@ -1,16 +1,16 @@
-import { reactive } from 'Vucript';
+import { reactive } from "Vucript";
 
-const state:reactive<{messageOne:string}> = {messageOne:"hello"};
-let messageTwo:reactive<string>="こんにちは";
-let change = ()=>{
-    messageTwo+="こんにちは";
+const state: reactive<{ messageOne: string }> = { messageOne: "hello" };
+let messageTwo: reactive<string> = "こんにちは";
+let change = () => {
+    messageTwo += "こんにちは";
+};
+
+function change2() {
+    messageTwo += "こんばんは";
 }
 
-function change2(){
-    messageTwo+="こんばんは"
-}
-
-let onMounted = ()=>{
+let onMounted = () => {
     console.log("マウントされました");
     change();
-}
+};

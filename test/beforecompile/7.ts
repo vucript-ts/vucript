@@ -1,4 +1,4 @@
-import { reactive, computed, importComponent } from 'Vucript';
+import { reactive, computed, importComponent } from "Vucript";
 type todoItem = { title: string; isDone: boolean; due: Date };
 let todo: reactive<todoItem[]> = [];
 let todoTitle: reactive<string> = "";
@@ -14,6 +14,6 @@ function deleteTodo(title: string) {
     todo.filter((item) => item.title != title);
 }
 
-let unfinishedTodo:computed<todoItem[]>=()=>{
-    return todo.filter(item=>!(item.isDone));
-}
+let unfinishedTodo: computed<todoItem[]> = () => {
+    return todo.filter((item) => !item.isDone);
+};

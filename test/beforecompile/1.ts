@@ -1,6 +1,6 @@
-import { reactive, computed } from 'Vucript';
-let counter:reactive<number> = 0;
+import { reactive, computed } from "Vucript";
+let counter: reactive<number> = 0;
 let add = () => {
-  counter++;
+    counter++;
 };
-const twiceTheCounter:computed<number> = (()=>counter);
+const twiceTheCounter: computed<number> = () => counter * 2;

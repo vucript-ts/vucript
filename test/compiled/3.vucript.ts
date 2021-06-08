@@ -7,7 +7,7 @@ import {
   onMounted,
 } from "vue";
 export default defineComponent({
-  props: { something: { type: string, required: true } },
+  props: { something: { type: String, required: true } },
   setup(props) {
     const { something } = toRefs(props);
     const counter = ref<number>(0);
@@ -24,7 +24,7 @@ export default defineComponent({
     onMounted(() => {
       a1();
     });
-    const twiceTheCounter = computed(() => counter.value);
+    const twiceTheCounter = computed(() => counter.value * 2);
     return { counter, a1, a2, state, messageTwo, twiceTheCounter };
   },
 });
