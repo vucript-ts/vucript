@@ -3,6 +3,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = __importDefault(require("./"));
 const argparse_1 = require("argparse");
@@ -16,4 +17,4 @@ parser.add_argument("-js", "--javascript", { help: "Compiles to javascript" });
 parser.add_argument("-dir", "--ourdir", {
     help: "Location of outputed files.",
 });
-_1.default.compileFile(parser.parse_args().arg1, parser.parse_args().dir ?? "./");
+_1.default.compileFile(parser.parse_args().arg1, (_a = parser.parse_args().dir) !== null && _a !== void 0 ? _a : "./");

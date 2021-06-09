@@ -34,7 +34,7 @@ class TypeAliasDeclaration {
 }
 exports.TypeAliasDeclaration = TypeAliasDeclaration;
 function parse(str) {
-    const sourceFile = ts.createSourceFile("", str, ts.ScriptTarget.Latest, true);
+    const sourceFile = ts.createSourceFile("", str, ts.ScriptTarget.ES2019, true, ts.ScriptKind.TS);
     let vueValiables = [];
     vueValiables = [...sourceFile.getChildren()[0].getChildren()]
         .map(visit)
@@ -43,15 +43,18 @@ function parse(str) {
 }
 exports.parse = parse;
 function visit(node) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     if (isFunctionDeclaration(node)) {
-        const funcName = node?.name?.escapedText?.toString() ?? "";
+        const funcName = (_c = (_b = (_a = node === null || node === void 0 ? void 0 : node.name) === null || _a === void 0 ? void 0 : _a.escapedText) === null || _b === void 0 ? void 0 : _b.toString()) !== null && _c !== void 0 ? _c : "";
         if (lifecycleHooksArray.indexOf(funcName) == -1) {
-            return new normalFunction(node?.name?.escapedText?.toString() ?? "", "function " +
+            return new normalFunction((_f = (_e = (_d = node === null || node === void 0 ? void 0 : node.name) === null || _d === void 0 ? void 0 : _d.escapedText) === null || _e === void 0 ? void 0 : _e.toString()) !== null && _f !== void 0 ? _f : "", "function " +
                 node
                     .getChildren()
                     .map((item) => item.getText())
                     .slice(2)
-                    .join(""));
+                    .join(""), searchIdentifier(node), node.getStart() +
+                ((_j = (_h = (_g = node === null || node === void 0 ? void 0 : node.name) === null || _g === void 0 ? void 0 : _g.escapedText) === null || _h === void 0 ? void 0 : _h.toString()) !== null && _j !== void 0 ? _j : "").length +
+                1);
         }
         else {
             return new lifecycleFunction(funcName, "function " +
@@ -59,7 +62,7 @@ function visit(node) {
                     .getChildren()
                     .map((item) => item.getText())
                     .slice(2)
-                    .join(""));
+                    .join(""), searchIdentifier(node), node.getStart());
         }
     }
     else if (node.kind == 232) {
@@ -86,7 +89,7 @@ function visit(node) {
                     break;
                 }
                 case "computed":
-                    return new computed(type, name, getValueFromStatement(node));
+                    return new computed(type, name, getValueFromStatement(node), searchIdentifier(node), (_k = getNestedChild(node, [0, 1, 0, 4])) === null || _k === void 0 ? void 0 : _k.getStart());
                     break;
                 default:
                     throw TypeError("Type is not correct");
@@ -94,8 +97,8 @@ function visit(node) {
         }
         else if (typeNum == 209 || typeNum == 208) {
             return lifecycleHooksArray.indexOf(name) == -1
-                ? new normalFunction(name, getNestedChild(node, [0, 1, 0, 2]).getText())
-                : new lifecycleFunction(name, getNestedChild(node, [0, 1, 0, 2]).getText());
+                ? new normalFunction(name, getNestedChild(node, [0, 1, 0, 2]).getText(), searchIdentifier(node), getNestedChild(node, [0, 1, 0, 2]).getStart())
+                : new lifecycleFunction(name, getNestedChild(node, [0, 1, 0, 2]).getText(), searchIdentifier(node), getNestedChild(node, [0, 1, 0, 2]).getStart());
         }
     }
     else if (node.kind == 233) {
@@ -125,11 +128,12 @@ function visit(node) {
     }
 }
 function expParser(node) {
+    var _a, _b, _c, _d;
     const children = node.getChildAt(0).getChildren();
     return {
         name: children[0].getText(),
-        arg1: children[2]?.getChildAt(0)?.getText(),
-        arg2: children[2]?.getChildAt(2)?.getText(),
+        arg1: (_b = (_a = children[2]) === null || _a === void 0 ? void 0 : _a.getChildAt(0)) === null || _b === void 0 ? void 0 : _b.getText(),
+        arg2: (_d = (_c = children[2]) === null || _c === void 0 ? void 0 : _c.getChildAt(2)) === null || _d === void 0 ? void 0 : _d.getText(),
     };
 }
 const lifecycleHooksArray = [
@@ -144,24 +148,30 @@ const lifecycleHooksArray = [
     "onRenderTriggered",
 ];
 class lifecycleFunction {
-    constructor(variableName, content) {
+    constructor(variableName, content, identifier, startPosition) {
         this.variableName = variableName;
         this.content = content;
+        this.identifier = identifier;
+        this.startPosition = startPosition;
     }
 }
 exports.lifecycleFunction = lifecycleFunction;
 class normalFunction {
-    constructor(variableName, content) {
+    constructor(variableName, content, identifier, startPosition) {
         this.variableName = variableName;
         this.content = content;
+        this.identifier = identifier;
+        this.startPosition = startPosition;
     }
 }
 exports.normalFunction = normalFunction;
 class computed {
-    constructor(type, variableName, content) {
+    constructor(type, variableName, content, identifier, startPosition) {
         this.type = type;
         this.variableName = variableName;
         this.content = content;
+        this.identifier = identifier;
+        this.startPosition = startPosition;
     }
 }
 exports.computed = computed;
@@ -209,15 +219,46 @@ function getVariableNameFromFirstStatement(node) {
     return getNestedChild(node, [0, 1, 0, 0]).getText();
 }
 function getValueFromStatement(node) {
-    return getNestedChild(node, [0, 1, 0, 4])?.getText();
+    var _a;
+    return (_a = getNestedChild(node, [0, 1, 0, 4])) === null || _a === void 0 ? void 0 : _a.getText();
 }
 function getNestedChild(node, arr) {
     let tmp = node;
     for (const item of arr) {
-        tmp = tmp?.getChildAt(item);
+        tmp = tmp === null || tmp === void 0 ? void 0 : tmp.getChildAt(item);
     }
     return tmp;
 }
 function isFunctionDeclaration(node) {
     return node.kind == 251;
+}
+class Identifiers {
+    constructor(start, end, str) {
+        this.start = start;
+        this.end = end;
+        this.str = str;
+    }
+}
+function searchIdentifier(node) {
+    if (node.getChildCount() > 0) {
+        return node
+            .getChildren()
+            .map((item) => searchIdentifier(item))
+            .reduce((acc, val) => {
+            if (val == null) {
+                return acc;
+            }
+            else {
+                return acc.concat(val);
+            }
+        }, []);
+    }
+    else {
+        if (node.kind == 78 /* && node.flags == 67108864 */) {
+            return [
+                new Identifiers(node.getStart(), node.getEnd(), node.getText()),
+            ];
+        }
+    }
+    return null;
 }

@@ -18,5 +18,6 @@ export declare class generateVueTemplate {
     private lifecycleFuncs;
     private importComponents;
     private returnVals;
-    private escapeRefs;
+    private addDotValueToRefVariable;
+    private replaceBetween;
 }

@@ -269,10 +269,13 @@ function searchIdentifier(node: ts.Node): Identifiers[] | null {
         return node
             .getChildren()
             .map((item) => searchIdentifier(item))
-            .flat()
-            .filter<Identifiers>(
-                (item): item is Identifiers => item instanceof Identifiers
-            );
+            .reduce((acc: Identifiers[], val) => {
+                if (val == null) {
+                    return acc;
+                } else {
+                    return acc.concat(val);
+                }
+            }, []);
     } else {
         if (node.kind == 78 /* && node.flags == 67108864 */) {
             return [

@@ -26,7 +26,7 @@ class generateVueTemplate {
                 .filter((item) => item instanceof parser_1.prop)
                 .forEach(function (item) {
                 const _item = item;
-                genCode += `${_item.variableName}: {type: ${_item.type},required: ${_item.isRequired},${_item.isRequired ? "" : "default:" + _item.content}},`;
+                genCode += `${_item.variableName}: {type: ${_item.type.charAt(0).toUpperCase() + _item.type.slice(1)},required: ${_item.isRequired},${_item.isRequired ? "" : "default:" + _item.content}},`;
             });
             genCode += "},";
         }
@@ -47,13 +47,13 @@ class generateVueTemplate {
         this.refs().forEach((item) => (genCode += `const ${item.variableName} = ref<${item.type}>(${item.content});`));
         this.reactives().forEach((item) => (genCode += `const ${item.variableName} = reactive<${item.type}>(${item.content});`));
         this.normalFuncs().forEach(function (item) {
-            genCode += `const ${item.variableName} = ${this.escapeRefs(item.content)};`;
+            genCode += `const ${item.variableName} = ${this.addDotValueToRefVariable(item.identifier, item.content, item.startPosition)};`;
         }, this);
         this.lifecycleFuncs().forEach(function (item) {
-            genCode += `${item.variableName}(${this.escapeRefs(item.content)});`;
+            genCode += `${item.variableName}(${this.addDotValueToRefVariable(item.identifier, item.content, item.startPosition)});`;
         }, this);
         this.computedFuncs().forEach(function (item) {
-            genCode += `const ${item.variableName} = computed(${this.escapeRefs(item.content)});`;
+            genCode += `const ${item.variableName} = computed(${this.addDotValueToRefVariable(item.identifier, item.content, item.startPosition)});`;
         }, this);
         genCode += `return{${this.returnVals().join()}}`;
         genCode += "},});";
@@ -123,15 +123,28 @@ class generateVueTemplate {
             item instanceof parser_1.importComponent ||
             item instanceof parser_1.ImportDeclaration ||
             item instanceof parser_1.TypeAliasDeclaration))
-            .map((item) => item?.variableName);
+            .map((item) => item === null || item === void 0 ? void 0 : item.variableName);
     }
-    escapeRefs(str) {
-        this.refs()
-            .map((item) => item.variableName)
-            .forEach((item) => {
-            str = str.replace(new RegExp("\\b(" + item + ")\\b", "g"), item + ".value");
+    addDotValueToRefVariable(identifiers, str, startPosition) {
+        identifiers === null || identifiers === void 0 ? void 0 : identifiers.forEach((item) => {
+            if (this.refs()
+                .map((seconditem) => seconditem.variableName)
+                .indexOf(item.str) != -1) {
+                str = this.replaceBetween(str, item.start - startPosition, item.end - startPosition, item.str + ".value");
+                startPosition -= 6;
+            }
         });
         return str;
     }
+    replaceBetween(target, start, end, what) {
+        return target.substring(0, start) + what + target.substring(end);
+    }
 }
 exports.generateVueTemplate = generateVueTemplate;
+class Identifiers {
+    constructor(start, end, str) {
+        this.start = start;
+        this.end = end;
+        this.str = str;
+    }
+}
