@@ -115,7 +115,11 @@ export class generateVueTemplate {
         },
         <generateVueTemplate>this);
         this.watchFuncs().forEach(function (this: generateVueTemplate, item) {
-            genCode += `${item.content};`;
+            genCode += `${this.addDotValueToRefVariable(
+                item.identifier,
+                item.content,
+                item.startPosition
+            )};`;
         }, <generateVueTemplate>this);
         genCode += `return{${this.returnVals().join()}}`;
         genCode += "},});";

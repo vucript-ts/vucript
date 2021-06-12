@@ -115,7 +115,13 @@ function visit(node: ts.Node): parsedContentType | undefined {
         if (name == "importComponent") {
             return new importComponent(arg1, arg2.slice(1, -1));
         } else if (name == "watch") {
-            return new watchFunction(node.getText());
+            return new watchFunction(
+                node.getText(),
+                searchIdentifier(
+                    node.getChildAt(0).getChildren()[2]?.getChildAt(2)
+                ),
+                node.getChildAt(0).getStart()
+            );
         } else {
             return undefined;
         }
@@ -223,7 +229,11 @@ class importComponent implements VueVariable {
 
 class watchFunction implements VueVariable {
     variableName: string;
-    constructor(readonly content: string) {
+    constructor(
+        readonly content: string,
+        readonly identifier: Identifiers[] | null,
+        readonly startPosition: number
+    ) {
         this.content = content;
         this.variableName = "";
     }
