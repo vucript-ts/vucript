@@ -118,6 +118,8 @@ function visit(node: ts.Node): parsedContentType | undefined {
         const { name, arg1, arg2 } = expParser(node);
         if (name == "importComponent") {
             return new importComponent(arg1, arg2.slice(1, -1));
+        } else if (name == "watch") {
+            return new watchFunction(node.getText());
         } else {
             return undefined;
         }
@@ -223,8 +225,16 @@ class importComponent implements VueVariable {
     }
 }
 
+class watchFunction implements VueVariable {
+    variableName: string;
+    constructor(readonly content: string) {
+        this.content = content;
+        this.variableName = "";
+    }
+}
+
 function isObject(val: ts.Node) {
-    if (val.kind == 200) {
+    if (val.kind == 200 || val.kind == 199) {
         return true;
     }
     return false;
@@ -259,6 +269,7 @@ export {
     computed,
     normalFunction,
     importComponent,
+    watchFunction,
 };
 class Identifiers {
     constructor(public start: number, public end: number, public str: string) {}

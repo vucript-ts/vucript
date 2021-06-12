@@ -10,6 +10,7 @@ import {
     parsedContentType,
     ImportDeclaration,
     TypeAliasDeclaration,
+    watchFunction,
 } from "./parser";
 export class generateVueTemplate {
     parsed: VueVariable[];
@@ -113,6 +114,9 @@ export class generateVueTemplate {
             )});`;
         },
         <generateVueTemplate>this);
+        this.watchFuncs().forEach(function (this: generateVueTemplate, item) {
+            genCode += `${item.content};`;
+        }, <generateVueTemplate>this);
         genCode += `return{${this.returnVals().join()}}`;
         genCode += "},});";
         return genCode;
@@ -130,6 +134,9 @@ export class generateVueTemplate {
         }
         if (this.isUsingComputed()) {
             imports.push("computed");
+        }
+        if (this.isUsingWatch()) {
+            imports.push("watch");
         }
         if (this.usedLifecycleFuncs().length > 0) {
             imports.push(...this.usedLifecycleFuncs());
@@ -160,6 +167,12 @@ export class generateVueTemplate {
             this.parsed.filter((item) => item instanceof computed).length > 0
         );
     }
+    private isUsingWatch(): boolean {
+        return (
+            this.parsed.filter((item) => item instanceof watchFunction).length >
+            0
+        );
+    }
     private computedFuncs(): computed[] {
         return this.parsed.filter(
             (item) => item instanceof computed
@@ -169,6 +182,11 @@ export class generateVueTemplate {
         return this.parsed.filter(
             (item) => item instanceof normalFunction
         ) as normalFunction[];
+    }
+    private watchFuncs(): watchFunction[] {
+        return this.parsed.filter(
+            (item) => item instanceof watchFunction
+        ) as watchFunction[];
     }
     private usedLifecycleFuncs(): string[] {
         return [
