@@ -16,7 +16,7 @@ function parse(str: string): parsedContentType[] {
     const sourceFile = ts.createSourceFile(
         "",
         str,
-        ts.ScriptTarget.ES2019,
+        ts.ScriptTarget.ES2020,
         true,
         ts.ScriptKind.TS
     );
