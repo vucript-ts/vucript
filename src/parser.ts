@@ -69,11 +69,7 @@ function visit(node: ts.Node): parsedContentType | undefined {
                 case "reactive":
                     {
                         const obj = getNestedChild(node, [0, 1, 0, 4]);
-                        if (isObject(obj)) {
-                            return new reactive(type, name, obj.getText());
-                        } else {
-                            return new ref(type, name, obj.getText());
-                        }
+                        return new ref(type, name, obj.getText());
                     }
                     break;
                 case "prop": {
@@ -231,13 +227,6 @@ class watchFunction implements VueVariable {
         this.content = content;
         this.variableName = "";
     }
-}
-
-function isObject(val: ts.Node) {
-    if (val.kind == 200 || val.kind == 199) {
-        return true;
-    }
-    return false;
 }
 
 function getVariableNameFromFirstStatement(node: ts.Node) {
