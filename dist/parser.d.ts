@@ -64,7 +64,14 @@ declare class importComponent implements VueVariable {
     content: null;
     constructor(path: string, variableName: string);
 }
-export { VueVariable, prop, lifecycleFunction, ref, reactive, computed, normalFunction, importComponent, };
+declare class watchFunction implements VueVariable {
+    readonly content: string;
+    readonly identifier: Identifiers[] | null;
+    readonly startPosition: number;
+    variableName: string;
+    constructor(content: string, identifier: Identifiers[] | null, startPosition: number);
+}
+export { VueVariable, prop, lifecycleFunction, ref, reactive, computed, normalFunction, importComponent, watchFunction, };
 declare class Identifiers {
     start: number;
     end: number;

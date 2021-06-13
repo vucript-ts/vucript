@@ -12,8 +12,10 @@ export declare class generateVueTemplate {
     private isUsingReative;
     private reactives;
     private isUsingComputed;
+    private isUsingWatch;
     private computedFuncs;
     private normalFuncs;
+    private watchFuncs;
     private usedLifecycleFuncs;
     private lifecycleFuncs;
     private importComponents;

@@ -55,6 +55,9 @@ class generateVueTemplate {
         this.computedFuncs().forEach(function (item) {
             genCode += `const ${item.variableName} = computed(${this.addDotValueToRefVariable(item.identifier, item.content, item.startPosition)});`;
         }, this);
+        this.watchFuncs().forEach(function (item) {
+            genCode += `${this.addDotValueToRefVariable(item.identifier, item.content, item.startPosition)};`;
+        }, this);
         genCode += `return{${this.returnVals().join()}}`;
         genCode += "},});";
         return genCode;
@@ -72,6 +75,9 @@ class generateVueTemplate {
         }
         if (this.isUsingComputed()) {
             imports.push("computed");
+        }
+        if (this.isUsingWatch()) {
+            imports.push("watch");
         }
         if (this.usedLifecycleFuncs().length > 0) {
             imports.push(...this.usedLifecycleFuncs());
@@ -96,11 +102,18 @@ class generateVueTemplate {
     isUsingComputed() {
         return (this.parsed.filter((item) => item instanceof parser_1.computed).length > 0);
     }
+    isUsingWatch() {
+        return (this.parsed.filter((item) => item instanceof parser_1.watchFunction).length >
+            0);
+    }
     computedFuncs() {
         return this.parsed.filter((item) => item instanceof parser_1.computed);
     }
     normalFuncs() {
         return this.parsed.filter((item) => item instanceof parser_1.normalFunction);
+    }
+    watchFuncs() {
+        return this.parsed.filter((item) => item instanceof parser_1.watchFunction);
     }
     usedLifecycleFuncs() {
         return [

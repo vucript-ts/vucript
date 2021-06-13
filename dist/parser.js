@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importComponent = exports.normalFunction = exports.computed = exports.reactive = exports.ref = exports.lifecycleFunction = exports.prop = exports.parse = exports.TypeAliasDeclaration = exports.ImportDeclaration = void 0;
+exports.watchFunction = exports.importComponent = exports.normalFunction = exports.computed = exports.reactive = exports.ref = exports.lifecycleFunction = exports.prop = exports.parse = exports.TypeAliasDeclaration = exports.ImportDeclaration = void 0;
 const ts = __importStar(require("typescript"));
 class ImportDeclaration {
     constructor(importText) {
@@ -34,7 +34,7 @@ class TypeAliasDeclaration {
 }
 exports.TypeAliasDeclaration = TypeAliasDeclaration;
 function parse(str) {
-    const sourceFile = ts.createSourceFile("", str, ts.ScriptTarget.ES2019, true, ts.ScriptKind.TS);
+    const sourceFile = ts.createSourceFile("", str, ts.ScriptTarget.ES2020, true, ts.ScriptKind.TS);
     let vueValiables = [];
     vueValiables = [...sourceFile.getChildren()[0].getChildren()]
         .map(visit)
@@ -43,7 +43,7 @@ function parse(str) {
 }
 exports.parse = parse;
 function visit(node) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     if (isFunctionDeclaration(node)) {
         const funcName = (_c = (_b = (_a = node === null || node === void 0 ? void 0 : node.name) === null || _a === void 0 ? void 0 : _a.escapedText) === null || _b === void 0 ? void 0 : _b.toString()) !== null && _c !== void 0 ? _c : "";
         if (lifecycleHooksArray.indexOf(funcName) == -1) {
@@ -75,12 +75,7 @@ function visit(node) {
                 case "reactive":
                     {
                         const obj = getNestedChild(node, [0, 1, 0, 4]);
-                        if (isObject(obj)) {
-                            return new reactive(type, name, obj.getText());
-                        }
-                        else {
-                            return new ref(type, name, obj.getText());
-                        }
+                        return new ref(type, name, obj.getText());
                     }
                     break;
                 case "prop": {
@@ -106,6 +101,9 @@ function visit(node) {
         const { name, arg1, arg2 } = expParser(node);
         if (name == "importComponent") {
             return new importComponent(arg1, arg2.slice(1, -1));
+        }
+        else if (name == "watch") {
+            return new watchFunction(node.getText(), searchIdentifier((_l = node.getChildAt(0).getChildren()[2]) === null || _l === void 0 ? void 0 : _l.getChildAt(2)), node.getChildAt(0).getStart());
         }
         else {
             return undefined;
@@ -209,12 +207,16 @@ class importComponent {
     }
 }
 exports.importComponent = importComponent;
-function isObject(val) {
-    if (val.kind == 200) {
-        return true;
+class watchFunction {
+    constructor(content, identifier, startPosition) {
+        this.content = content;
+        this.identifier = identifier;
+        this.startPosition = startPosition;
+        this.content = content;
+        this.variableName = "";
     }
-    return false;
 }
+exports.watchFunction = watchFunction;
 function getVariableNameFromFirstStatement(node) {
     return getNestedChild(node, [0, 1, 0, 0]).getText();
 }
