@@ -108,6 +108,16 @@ function visit(node: ts.Node): parsedContentType | undefined {
                       searchIdentifier(node),
                       getNestedChild(node, [0, 1, 0, 2]).getStart()
                   );
+        } else if (getNestedChild(node, [0, 1, 0, 2, 0]).getText() == "watch") {
+            return new watchFunction(
+                getNestedChild(node, [0, 1, 0, 2]).getText(),
+                searchIdentifier(
+                    getNestedChild(node, [0, 1, 0, 2, 2, 2, 5]) ??
+                        getNestedChild(node, [0, 1, 0, 2, 2, 2, 4])
+                ),
+                getNestedChild(node, [0, 1, 0, 2]).getStart(),
+                getNestedChild(node, [0, 1, 0, 0]).getText()
+            );
         }
     } else if (node.kind == 233) {
         //ExpressionStatement
@@ -118,9 +128,11 @@ function visit(node: ts.Node): parsedContentType | undefined {
             return new watchFunction(
                 node.getText(),
                 searchIdentifier(
-                    node.getChildAt(0).getChildren()[2]?.getChildAt(2)
-                ),
-                node.getChildAt(0).getStart()
+                    getNestedChild(node, [0, 2, 2, 5]) ??
+                        getNestedChild(node, [0, 2, 2, 4])
+                ) ?? null,
+                node.getChildAt(0).getStart(),
+                null
             );
         } else {
             return undefined;
@@ -232,7 +244,8 @@ class watchFunction implements VueVariable {
     constructor(
         readonly content: string,
         readonly identifier: Identifiers[] | null,
-        readonly startPosition: number
+        readonly startPosition: number,
+        readonly stopFuncName: string | null
     ) {
         this.content = content;
         this.variableName = "";
@@ -275,6 +288,9 @@ class Identifiers {
 }
 
 function searchIdentifier(node: ts.Node): Identifiers[] | null {
+    if (node == null) {
+        return null;
+    }
     if (node.getChildCount() > 0) {
         return node
             .getChildren()

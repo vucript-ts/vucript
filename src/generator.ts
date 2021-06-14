@@ -115,6 +115,9 @@ export class generateVueTemplate {
         },
         <generateVueTemplate>this);
         this.watchFuncs().forEach(function (this: generateVueTemplate, item) {
+            if (item.stopFuncName != null) {
+                genCode += `const ${item.stopFuncName}=`;
+            }
             genCode += `${this.addDotValueToRefVariable(
                 item.identifier,
                 item.content,
@@ -224,6 +227,7 @@ export class generateVueTemplate {
                         item instanceof lifecycleFunction ||
                         item instanceof importComponent ||
                         item instanceof ImportDeclaration ||
+                        item instanceof watchFunction ||
                         item instanceof TypeAliasDeclaration
                     )
             )
