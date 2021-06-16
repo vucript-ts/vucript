@@ -32,6 +32,6 @@ export default defineComponent({
       items.value = [];
     });
     const stop5 = watch(pageNumber, someFunc);
-    return { items, pageNumber, someFunc };
+    return { items, pageNumber, someFunc, stop, stop2, stop3, stop4, stop5 };
   },
 });

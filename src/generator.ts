@@ -219,19 +219,27 @@ export class generateVueTemplate {
         ) as importComponent[];
     }
     private returnVals(): string[] {
-        return this.parsed
-            .filter(
-                (item) =>
-                    !(
-                        item instanceof prop ||
-                        item instanceof lifecycleFunction ||
-                        item instanceof importComponent ||
-                        item instanceof ImportDeclaration ||
-                        item instanceof watchFunction ||
-                        item instanceof TypeAliasDeclaration
-                    )
-            )
-            .map((item) => item?.variableName);
+        return [
+            ...this.parsed
+                .filter(
+                    (item) =>
+                        !(
+                            item instanceof prop ||
+                            item instanceof lifecycleFunction ||
+                            item instanceof importComponent ||
+                            item instanceof ImportDeclaration ||
+                            item instanceof watchFunction ||
+                            item instanceof TypeAliasDeclaration
+                        )
+                )
+                .map((item) => item?.variableName),
+            ...this.watchStopHandlers(),
+        ];
+    }
+    private watchStopHandlers(): string[] {
+        return this.watchFuncs()
+            .map((item) => item.stopFuncName)
+            .filter<string>((item): item is string => item != null);
     }
     private addDotValueToRefVariable(
         identifiers: Identifiers[] | null,
