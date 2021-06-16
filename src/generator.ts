@@ -11,6 +11,7 @@ import {
     ImportDeclaration,
     TypeAliasDeclaration,
     watchFunction,
+    normalFirstDeclation,
 } from "./parser";
 export class generateVueTemplate {
     parsed: VueVariable[];
@@ -73,6 +74,9 @@ export class generateVueTemplate {
                 : ""
         }`;
         genCode += this.other.join("");
+        this.normalDeclations().forEach(
+            (item) => (genCode += `${item.content}\n`)
+        );
         this.refs().forEach(
             (item) =>
                 (genCode += `const ${item.variableName} = ref<${
@@ -218,6 +222,11 @@ export class generateVueTemplate {
         return this.parsed.filter(
             (item) => item instanceof lifecycleFunction
         ) as lifecycleFunction[];
+    }
+    private normalDeclations(): normalFirstDeclation[] {
+        return this.parsed.filter(
+            (item) => item instanceof normalFirstDeclation
+        ) as normalFirstDeclation[];
     }
     private importComponents(): importComponent[] {
         return this.parsed.filter(

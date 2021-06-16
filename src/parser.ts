@@ -124,6 +124,8 @@ function visit(node: ts.Node): parsedContentType | undefined {
                 getNestedChild(node, [0, 1, 0, 2]).getStart(),
                 getNestedChild(node, [0, 1, 0, 0]).getText()
             );
+        } else {
+            return new normalFirstDeclation(node.getText());
         }
     } else if (node.kind == 233) {
         //ExpressionStatement
@@ -259,6 +261,13 @@ class watchFunction implements VueVariable {
         this.variableName = "";
     }
 }
+class normalFirstDeclation implements VueVariable {
+    variableName: string;
+    constructor(readonly content: string) {
+        this.content = content;
+        this.variableName = "";
+    }
+}
 
 function getVariableNameFromFirstStatement(node: ts.Node) {
     return getNestedChild(node, [0, 1, 0, 0]).getText();
@@ -290,6 +299,7 @@ export {
     normalFunction,
     importComponent,
     watchFunction,
+    normalFirstDeclation,
 };
 class Identifiers {
     constructor(public start: number, public end: number, public str: string) {}
