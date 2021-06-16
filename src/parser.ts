@@ -130,7 +130,7 @@ function visit(node: ts.Node): parsedContentType | undefined {
                 searchIdentifier(
                     getNestedChild(node, [0, 2, 2, 5]) ??
                         getNestedChild(node, [0, 2, 2, 4])
-                ) ?? null,
+                ),
                 node.getChildAt(0).getStart(),
                 null
             );
