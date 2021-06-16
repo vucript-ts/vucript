@@ -75,7 +75,13 @@ export class generateVueTemplate {
         genCode += this.other.join("");
         this.refs().forEach(
             (item) =>
-                (genCode += `const ${item.variableName} = ref<${item.type}>(${item.content});`)
+                (genCode += `const ${item.variableName} = ref<${
+                    item.type
+                }>(${this.addDotValueToRefVariable(
+                    item.identifier,
+                    item.content,
+                    item.startPosition
+                )});`)
         );
         this.reactives().forEach(
             (item) =>

@@ -69,7 +69,13 @@ function visit(node: ts.Node): parsedContentType | undefined {
                 case "reactive":
                     {
                         const obj = getNestedChild(node, [0, 1, 0, 4]);
-                        return new ref(type, name, obj.getText());
+                        return new ref(
+                            type,
+                            name,
+                            obj.getText(),
+                            searchIdentifier(obj),
+                            obj.getStart()
+                        );
                     }
                     break;
                 case "prop": {
@@ -211,7 +217,9 @@ class ref implements VueVariable {
     constructor(
         readonly type: string,
         readonly variableName: string,
-        readonly content: string
+        readonly content: string,
+        readonly identifier: Identifiers[] | null,
+        readonly startPosition: number
     ) {}
 }
 class reactive implements VueVariable {

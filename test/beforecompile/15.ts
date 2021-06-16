@@ -3,7 +3,7 @@ let items: reactive<Array<{ title: string }>> = [
     { title: "title2" },
     { title: "title3" },
 ];
-let firstItem: reactive<{ title: string }> = items.value[0];
+let firstItem: reactive<{ title: string }> = items[0];
 function click() {
     items = [{ title: "title a" }, { title: "title b" }, { title: "title c" }];
 }
