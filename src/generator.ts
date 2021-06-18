@@ -244,7 +244,8 @@ export class generateVueTemplate {
                             item instanceof importComponent ||
                             item instanceof ImportDeclaration ||
                             item instanceof watchFunction ||
-                            item instanceof TypeAliasDeclaration
+                            item instanceof TypeAliasDeclaration ||
+                            item instanceof normalFirstDeclation
                         )
                 )
                 .map((item) => item?.variableName),
