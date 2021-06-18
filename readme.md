@@ -4,6 +4,10 @@ Vucript is a typescript dialect that compiles to components of Vue.
 
 With Vucript, you can write your Vue components more simply than normal TypeScript.
 
+## Requirement
+
+-   vue: ^3.0.0 (vucript doesn't work on vue 2)
+
 ## Installation
 
 ### Vue CLI Plugin (Recommended)
@@ -31,12 +35,12 @@ You can check our documentation of Vucript [here](https://s19514tt.gitbook.io/vu
 Let's write a simple counter app in Vucript.
 
 ```typescript
-import { reactive, computed } from 'Vucript';
-let counter:reactive<number> = 0;
+import { reactive, computed } from "Vucript";
+let counter: reactive<number> = 0;
 let add = () => {
-  counter++;
+    counter++;
 };
-const twiceTheCounter:computed<number> = (()=>counter*2);
+const twiceTheCounter: computed<number> = () => counter * 2;
 ```
 
 Vucript compiler transforms the above to Vue Composition API Code
@@ -44,14 +48,14 @@ Vucript compiler transforms the above to Vue Composition API Code
 ```typescript
 import { defineComponent, ref, computed } from "vue";
 export default defineComponent({
-  setup() {
-    const counter = ref<number>(0);
-    const add = () => {
-      counter.value++;
-    };
-    const twiceTheCounter = computed(() => counter.value*2);
-    return { counter, add, twiceTheCounter };
-  },
+    setup() {
+        const counter = ref<number>(0);
+        const add = () => {
+            counter.value++;
+        };
+        const twiceTheCounter = computed(() => counter.value * 2);
+        return { counter, add, twiceTheCounter };
+    },
 });
 ```
 
@@ -64,7 +68,7 @@ Vucript code is more simple than normal Vue Composition API code!
 Install vue-cli-plugin-vucript first. Then, please add` lang="vucript"` to your Vue Single Component Files.
 
 ```vue
-<script lang='vucript'>
+<script lang="vucript">
 import { reactive, computed } from 'Vucript';
 let counter:reactive<number> = 0;
 let add = () => {
@@ -90,8 +94,8 @@ Import Vucript and run `Vucript.compile` function!
 ```typescript
 import Vucript from "vucript";
 
-let compiled = Vucript.compile(`let counter:reactive<number> = 0;`);//compile function returns compiled string.
-Vucript.compileFile(filename, "./");//compileFile function compiles and save a file.
+let compiled = Vucript.compile(`let counter:reactive<number> = 0;`); //compile function returns compiled string.
+Vucript.compileFile(filename, "./"); //compileFile function compiles and save a file.
 ```
 
 ## Bug Report and Support
